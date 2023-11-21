@@ -1,4 +1,4 @@
-#In-Memory Task Management Application API
+In-Memory Task Management Application API
 
 Application allows users to create, view, update and delete tasks.
 
@@ -17,11 +17,13 @@ Features
   Requires a JSON object containing fullname, email and password
   path: /api/v1/auth/signup
   Example:
+  ```
   {
     "fullname" : "Willy wonka",
     "email": "Willywonka@gmail.com",
     "password": "123Willy"
   }
+  ```
 
   Fullname must be at least 3 letters long,
   Email must be a valid format with '@' and '.com' such as the one in the example,
