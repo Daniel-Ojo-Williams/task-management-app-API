@@ -43,9 +43,11 @@ export const createTask = (req, res) => {
 
     const task_status = status || 'pending'
 
-    user.tasks.push({id: nanoid(), title, description, due_date, status: task_status})
+    const task_id = nanoid()
 
-    res.status(StatusCodes.CREATED).json({message: 'Task saved succesfully', tasks: user.tasks})
+    user.tasks.push({id: task_id, title, description, due_date, status: task_status})
+
+    res.status(StatusCodes.CREATED).json({message: 'Task saved succesfully', task: user.tasks.find(task => task.id === task_id)})
 
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message)

@@ -14,7 +14,7 @@ Tasks would have:
 - ### User Authentication
 	- User can register and log in during a session.
 
-  ##### Sign Up
+  #### Sign Up
 
   Requires a JSON object containing fullname, email and password.
 
@@ -44,7 +44,7 @@ Tasks would have:
     }
   }
   ```
-  ##### Sign in
+  #### Sign in
 
   After sign up in the same session, users can also sign in.
 
@@ -76,10 +76,36 @@ Tasks would have:
   ```
 
 
+- ### Task Creation
+	- Users can create tasks stored in server's memory.
 
+  Requiers a JSON object containing title, description, due_date.
+  status can also be added, can be either completed or pending, if no status is provided 'pending' is added by default.
+  *NOTE* due_date is a string, it can be in any format for now, but it's a string.
 
-- Task Creation
-	- Users can create tasks stored in server's memory
+  Example request:
+  ```JSON
+  {
+    "title": "Task title here",
+    "description": "Describe task title here",
+    "due_date": "04/11/1998"
+  }
+  ```
+
+  Example response:
+  ```JSON
+  {
+    "message": "Task saved succesfully",
+    "task": {
+        "id": "9ktapmTHWcvn12xTPNyAB",
+        "title": "Task title here",
+        "description": "Describe task title here",
+        "due_date": "04/11/1998",
+        "status": "pending"
+    }
+  }
+  ```
+
 - Task Viewing
 	- Tasks are retrievable from memory during session
 - Task Updating
