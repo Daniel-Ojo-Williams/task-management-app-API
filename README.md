@@ -80,7 +80,9 @@ Tasks would have:
 	- Users can create tasks stored in server's memory.
 
   Requiers a JSON object containing title, description, due_date.
-  status can also be added, can be either completed or pending, if no status is provided 'pending' is added by default.
+  
+  status can also be added, can be either completed or pending, if status is not provided 'pending' is added by default.
+  
   *NOTE* due_date is a string, it can be in any format for now, but it's a string.
 
   Example request:
