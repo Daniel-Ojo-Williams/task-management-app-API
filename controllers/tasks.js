@@ -5,7 +5,67 @@ import Users from "../models/users.js";
 import { nanoid } from "nanoid";
 
 export const getAllTasks = (req, res) => {
-  console.log(req.headers)
+  try {
+    const { token } = req.cookies;
+
+    if(!token){
+      return res.status(StatusCodes.UNAUTHORIZED).json({message: 'Invlalid token'});
+    }
+
+    const { id } = jwt.verify(token, process.env.PRIVATE_KEY)
+    console.log(id)
+
+    const user = Users.find(user => user.id === id)
+
+    if(!user){
+      res.json('user not found')
+    }
+
+    const tasks = user.tasks
+
+    if(!tasks.length > 0){
+      return res.status(StatusCodes.OK).json({message: 'User has no tasks in memory, create tasks to get started'})
+    }
+
+    res.status(StatusCodes.OK).json({tasks, 'num_of_tasks': tasks.length})
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message})
+  }
+}
+
+export const getTask = (req, res) => {
+  try {
+    const { token } = req.cookies;
+
+    if(!token){
+      return res.status(StatusCodes.UNAUTHORIZED).json({message: 'Invlalid token'});
+    }
+
+    const { id } = jwt.verify(token, process.env.PRIVATE_KEY)
+    console.log(id)
+
+    const user = Users.find(user => user.id === id)
+
+    if(!user){
+      res.json('user not found')
+    }
+
+    const { task_id } = req.params
+
+    if(!task_id){
+      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Please provide task id to get task'})
+    }
+
+    const task = user.tasks.find(task => task.id === task_id)
+
+    if(!task){
+      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Invalid task id, please try again with a valid task id'})
+    }
+
+    res.status(StatusCodes.OK).json(task)
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message})
+  }
 }
 
 export const createTask = (req, res) => {
