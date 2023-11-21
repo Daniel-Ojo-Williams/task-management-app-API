@@ -98,11 +98,12 @@ export const signin = async (req, res) => {
     }
 
     // generate token containing user id
-    const token = jwt.sign({id: user_id}, process.env.PRIVATE_KEY)
+    const token = jwt.sign({id: user.id}, process.env.PRIVATE_KEY)
+
     // encapsulate token in cookie sent to the browser
     res.cookie('token', token, {secure: true, httpOnly: true, sameSite: 'strict'})
   
-    res.status(StatusCodes.OK).json({message: 'User saved successfully', data: {
+    res.status(StatusCodes.OK).json({data: {
       id: user.id,
       fullname: user.personal_info.fullname,
       email: user.personal_info.email,

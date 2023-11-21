@@ -1,9 +1,9 @@
 import express from 'express';
-import { signin, signup } from '../controllers/authentication.js';
+import { getAllTasks } from '../controllers/tasks.js';
+
 
 const router = express.Router();
 
-router.route('/signup').post(signup);
-router.route('/signin').post(signin);
+router.route('/getAllTasks').get(getAllTasks)
 
 export default router
