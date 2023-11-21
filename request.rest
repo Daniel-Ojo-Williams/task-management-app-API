@@ -1,4 +1,11 @@
-GET http://localhost:3000/api/v1/tasks/createTask
+PUT http://localhost:3000/api/v1/tasks/updateTask/_E3vRnC4tPX4MoLfSW9Wx
 Content-Type: application/json
-Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlVIdmUxTWRLMVdNX0g3amYwcFU5SiIsImlhdCI6MTcwMDU4MzYyNH0.ipF0B90NdoC7oFob6_oyj4f5gf7xOj3XYaQY_mTLNMQ; Path=/; HttpOnly; Secure; SameSite=Strict
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik9QdW81MDJMcDRvV2dyR3NDd1lLTiIsImlhdCI6MTcwMDYwNTQyMn0.uZfbexHMFEwBMsmhEYpR_XP132eWKYdjR3p5Bv8a8FQ; Path=/; HttpOnly; Secure; SameSite=Strict
+
+{
+    "title": "Task title here",
+    "description": "Describe task title here",
+    "due_date": "04/11/1998",
+    "status": "completed"
+}
 
