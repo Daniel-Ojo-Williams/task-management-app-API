@@ -1,4 +1,4 @@
-In-Memory Task Management Application API
+# In-Memory Task Management Application API
 
 Application allows users to create, view, update and delete tasks.
 
@@ -11,13 +11,14 @@ Tasks would have:
 - Status (completed or pending)
 
 Features
-- User Authentication
+- ### User Authentication
 	- User can register and log in during a session
   Sign Up
-  Requires a JSON object containing fullname, email and password
+  Requires a JSON object containing fullname, email and password,
   path: /api/v1/auth/signup
+
   Example:
-  ```
+  ```json
   {
     "fullname" : "Willy wonka",
     "email": "Willywonka@gmail.com",
@@ -30,6 +31,7 @@ Features
   Password should be at least 6 letters long, contain at least an uppercase letter and a digit.
 
   Example response:
+  ```json
   {
     "message": 'user saved successfully',
     "data": {
@@ -38,18 +40,24 @@ Features
       "email": "Willywonka@gmail.com"
     }
   }
+  ```
 
   After sign up in the same session, users can also sign in
   path: /api/v1/auth/signin
   Requires a JSON object containing email and password
+
   Example request:
+  ```json
   {
     "email": "Willywonka@gmail.com",
     "password": "123Willy"
   }
-
+  ```
+  
   if the provided values are correct as a registered user,
+
   Example response:
+  ```json
   {
     data: {
       "id": "mXJut0--FazUfjec2L6bI",
@@ -59,7 +67,7 @@ Features
       "num_of_tasks": 0
     }
   }
-
+  ```
 
 
 
