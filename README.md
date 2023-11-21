@@ -10,7 +10,7 @@ Tasks would have:
 - Due date
 - Status (completed or pending)
 
-Features
+## Features
 - ### User Authentication
 	- User can register and log in during a session.
 
