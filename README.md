@@ -12,10 +12,13 @@ Tasks would have:
 
 Features
 - ### User Authentication
-	- User can register and log in during a session
-  Sign Up
-  Requires a JSON object containing fullname, email and password,
-  path: /api/v1/auth/signup
+	- User can register and log in during a session.
+
+  ##### Sign Up
+
+  Requires a JSON object containing fullname, email and password.
+
+  path: /api/v1/auth/signup.
 
   Example:
   ```json
@@ -26,8 +29,8 @@ Features
   }
   ```
 
-  Fullname must be at least 3 letters long,
-  Email must be a valid format with '@' and '.com' such as the one in the example,
+  Fullname must be at least 3 letters long.
+  Email must be a valid format with '@' and '.com' such as the one in the example.
   Password should be at least 6 letters long, contain at least an uppercase letter and a digit.
 
   Example response:
@@ -41,11 +44,14 @@ Features
     }
   }
   ```
+  ##### Sign in
 
-  After sign up in the same session, users can also sign in
-  path: /api/v1/auth/signin
-  Requires a JSON object containing email and password
+  After sign up in the same session, users can also sign in.
 
+  Requires a JSON object containing email and password.
+
+  path: /api/v1/auth/signin.
+  
   Example request:
   ```json
   {
