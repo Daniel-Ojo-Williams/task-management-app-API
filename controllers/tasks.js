@@ -96,8 +96,6 @@ export const updateTask = (req, res) => {
 
     const { title, description, status, due_date } = req.body
 
-    const task_status = status || 'pending'
-
     // validate task details
     if(!title){
       return res.status(StatusCodes.BAD_REQUEST).json({message: 'Task title is required to add task'})
@@ -111,9 +109,8 @@ export const updateTask = (req, res) => {
       return res.status(StatusCodes.BAD_REQUEST).json({message: 'Task requires a due date'})
     }
 
-
     const task_update = {
-      id:task_id, title, description, due_date, status: task_status
+      id:task_id, title, description, due_date, status: status || 'pending'
     }
 
     const user_tasks = user.tasks.map(task => {
@@ -129,7 +126,7 @@ export const updateTask = (req, res) => {
 
     Users.splice(user_index, 1, update_user)
 
-    res.status(StatusCodes.OK).json({message: 'Task updated successfully', updated_task: task_update, Users})
+    res.status(StatusCodes.OK).json({message: 'Task updated successfully', updated_task: task_update})
 
 
   } catch (error) {
