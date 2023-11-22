@@ -8,6 +8,7 @@ import 'dotenv/config.js'
 
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
+const private_key = process.env.PRIVATE_KEY || 'PRIVATE_KEY'
 
 const formatData = (id, fullname, email, password) => {
   return {
@@ -23,7 +24,6 @@ const formatData = (id, fullname, email, password) => {
 
 export const signup = async (req, res) => {
   try {
-    // console.log(req.body)
     const { fullname, email, password } = req.body
 
   // request validation
@@ -64,7 +64,7 @@ export const signup = async (req, res) => {
   Users.push(user)
 
   // generate token containing user id
-  const token = jwt.sign({id: user_id}, process.env.PRIVATE_KEY)
+  const token = jwt.sign({id: user_id}, private_key)
 
   // encapsulate token in cookie sent to the browser
   res.cookie('token', token, {secure: true, httpOnly: true, sameSite: 'strict'})
@@ -98,7 +98,8 @@ export const signin = async (req, res) => {
     }
 
     // generate token containing user id
-    const token = jwt.sign({id: user.id}, process.env.PRIVATE_KEY)
+    
+    const token = jwt.sign({id: user.id}, private_key)
 
     // encapsulate token in cookie sent to the browser
     res.cookie('token', token, {secure: true, httpOnly: true, sameSite: 'strict'})
