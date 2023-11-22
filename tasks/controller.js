@@ -113,13 +113,9 @@ export const updateTask = (req, res) => {
       id:task_id, title, description, due_date, status: status || 'pending'
     }
 
-    const user_tasks = user.tasks.map(task => {
-      return task.id === task_id ? task_update : task
-    })
-
     const update_user = {
       ...user,
-      tasks: user_tasks
+      tasks: user.tasks.map(task => (task.id === task_id ? task_update : task))
     }
 
     const user_index = Users.indexOf(user)
@@ -177,4 +173,48 @@ export const createTask = (req, res) => {
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message)
   }
+}
+
+export const deleteTask = (req, res) => {
+  try {
+    const { token } = req.cookies
+
+    if(!token){
+      return res.status(StatusCodes.UNAUTHORIZED).json({message: 'Invlalid token'});
+    }
+
+    const { id } = jwt.verify(token, process.env.PRIVATE_KEY)
+
+    const user = Users.find(user => user.id === id)
+
+    if(!user){
+      return res.status(StatusCodes.BAD_REQUEST).json({message: 'user not found'})
+    }
+
+    const { task_id } = req.params
+
+    if(!task_id){
+      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Please provide task id to get task'})
+    }
+
+    const task = user.tasks.find(task => task.id === task_id)
+    
+    if(!task){
+      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Task with provided id not found'})
+    }
+
+    const updated_user = {
+      ...user,
+      tasks: user.tasks.filter(task => task.id !== task_id)
+    }
+
+    const user_index = Users.indexOf(user)
+
+    Users.splice(user_index, 1, updated_user)
+
+    res.status(StatusCodes.OK).json({message: 'Task deleted successfully'})
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message)
+  }
+
 }

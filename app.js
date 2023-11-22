@@ -1,6 +1,6 @@
 import express, { urlencoded } from 'express';
 import AuthRoute from './authentication/routes.js'
-import TaskRoute from './routes/routes.js'
+import TaskRoute from './tasks/routes.js'
 import cookieParser from 'cookie-parser';
 
 const app = express();
