@@ -111,7 +111,7 @@ Tasks would have:
 - ### Task Viewing
 	- Tasks are retrievable from memory during session by sending a **GET** request.
     Users can retrieve all their tasks.
-    ```**path: /api/v1/tasks**.```
+    ```path: /api/v1/tasks.```
 
     Example response:
     ```JSON
@@ -147,7 +147,7 @@ Tasks would have:
     ```**path: /api/v1/tasks/{task_id}**.```
 
     Exapmle request:
-    ```request path: **/api/v1/tasks/9ktapmTHWcvn12xTPNyAB**```
+    ```request path: /api/v1/tasks/9ktapmTHWcvn12xTPNyAB```
 
     Example response:
   ```JSON
@@ -168,7 +168,7 @@ Tasks would have:
   path: **/api/tasks/{id}**
 
   Example request:
-  Request path: **/api/tasks/rr6K2YuX-YqOe3l2pV4Wd**.
+  ```Request path: /api/tasks/rr6K2YuX-YqOe3l2pV4Wd```.
 
   body:  
   ```JSON
@@ -197,10 +197,10 @@ Tasks would have:
 	- Tasks can be deleted by the user.
   Users can delete a previously created tasks by providing the task id in a **DELETE** request.
 
-  ```path: **/api/tasks/{id}**.```
+  ```path:/api/tasks/{id}.```
 
   Example request:
-  ```Request path: **/api/tasks/rr6K2YuX-YqOe3l2pV4Wd**.```
+  ```Request path: /api/tasks/rr6K2YuX-YqOe3l2pV4Wd.```
 
   Response:
   ```JSON
