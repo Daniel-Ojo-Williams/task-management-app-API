@@ -18,7 +18,7 @@ Tasks would have:
 
   Requires a JSON object containing fullname, email and password.
 
-  path: /api/v1/auth/signup.
+  ```path: /api/v1/auth/signup.```
 
   Example:
   ```json
@@ -50,7 +50,7 @@ Tasks would have:
 
   Requires a JSON object containing email and password.
 
-  path: /api/v1/auth/signin.
+  ```path: /api/v1/auth/signin.```
   
   Example request:
   ```json
@@ -111,7 +111,7 @@ Tasks would have:
 - ### Task Viewing
 	- Tasks are retrievable from memory during session by sending a **GET** request.
     Users can retrieve all their tasks.
-    **path: /api/v1/tasks**.
+    ```**path: /api/v1/tasks**.```
 
     Example response:
     ```JSON
@@ -144,10 +144,10 @@ Tasks would have:
     ```
 
     Users can also retrieve a single task by passing the task id into the request paramter
-    **path: /api/v1/tasks/{task_id}**.
+    ```**path: /api/v1/tasks/{task_id}**.```
 
     Exapmle request:
-    request path: **/api/v1/tasks/9ktapmTHWcvn12xTPNyAB**
+    ```request path: **/api/v1/tasks/9ktapmTHWcvn12xTPNyAB**```
 
     Example response:
   ```JSON
@@ -196,10 +196,11 @@ Tasks would have:
 - ### Task Deletion
 	- Tasks can be deleted by the user.
   Users can delete a previously created tasks by providing the task id in a **DELETE** request.
-  path: **/api/tasks/{id}**.
+
+  ```path: **/api/tasks/{id}**.```
 
   Example request:
-  Request path: **/api/tasks/rr6K2YuX-YqOe3l2pV4Wd**.
+  ```Request path: **/api/tasks/rr6K2YuX-YqOe3l2pV4Wd**.```
 
   Response:
   ```JSON
@@ -208,7 +209,7 @@ Tasks would have:
   }
   ```
 	- Deleted tasks are removed from memory
-  
+
 
 - Task Status Update
 	- Task status field can be toggled between pending and completed
