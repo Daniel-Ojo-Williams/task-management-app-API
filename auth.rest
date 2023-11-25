@@ -1,6 +1,6 @@
-POST http://localhost:3000/api/v1/auth/signup
+POST http://localhost:3000/auth/signup
 Content-Type: application/json
-# Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IllITVFrdkZxbTlIWkpSeXp6ME9NaCIsImlhdCI6MTcwMDYwNTEyN30._04xD8WnmwcfYNxEZk7jazcohcHywCV8PXIgO-uc-UA; Path=/; HttpOnly; Secure; SameSite=Strict
+
 
 {
   "fullname": "Willy wonka",

@@ -12,13 +12,11 @@ Tasks would have:
 
 ## Features
 - ### User Authentication
-	- User can register and log in during a session by sending a **POST** request.
 
   #### Sign Up
 
-  Requires a JSON object containing fullname, email and password.
-
-  ```path: /api/v1/auth/signup.```
+  - Method: POST.
+  - Endpoint: **/auth/signup**.
 
   Example:
   ```json
@@ -33,7 +31,7 @@ Tasks would have:
   Email must be a valid format with '@' and '.com' such as the one in the example.
   Password should be at least 6 letters long, contain at least an uppercase letter and a digit.
 
-  Example response:
+  Response:
   ```json
   {
     "message": 'user saved successfully',
@@ -46,13 +44,10 @@ Tasks would have:
   ```
   #### Sign in
 
-  After sign up in the same session, users can also sign in by sending a **POST** request.
-
-  Requires a JSON object containing email and password.
-
-  ```path: /api/v1/auth/signin.```
+  - Method: POST.
+  - Endpoint: **/auth/signin**.
   
-  Example request:
+  Request:
   ```json
   {
     "email": "Willywonka@gmail.com",
@@ -62,7 +57,7 @@ Tasks would have:
   
   if the provided values are correct as a registered user,
 
-  Example response:
+  Response:
   ```json
   {
     data: {
@@ -77,15 +72,14 @@ Tasks would have:
 
 
 - ### Task Creation
-	- Users can create tasks stored in server's memory by sending a **POST** request.
-
-  Requiers a JSON object containing title, description, due_date.
+	- Method: POST.
+  - Endpoint: **/tasks/:user_id**.
   
   status can also be added, can be either completed or pending, if status is not provided 'pending' is added by default.
   
   *NOTE* due_date is a string, it can be in any format for now, but it's a string.
 
-  Example request:
+  Request:
   ```JSON
   {
     "title": "Task title here",
@@ -94,7 +88,7 @@ Tasks would have:
   }
   ```
 
-  Example response:
+  Response:
   ```JSON
   {
     "message": "Task saved succesfully",
@@ -109,11 +103,10 @@ Tasks would have:
   ```
 
 - ### Task Viewing
-	- Tasks are retrievable from memory during session by sending a **GET** request.
-    Users can retrieve all their tasks.
-    ```**path: /api/v1/tasks**.```
+	- Endpoint: /tasks/:user_id.
+  - Method: GET.
 
-    Example response:
+    Response:
     ```JSON
       {
       "tasks": [
@@ -125,14 +118,14 @@ Tasks would have:
               "status": "pending"
           },
           {
-              "id": "F2fk_kMkA55XoJDiu3zp7",
+              "id": "F2fkDiu3zp7",
               "title": "Enter task title here",
               "description": "Describe task here",
               "due_date": "30/12/2023",
               "status": "pending"
           },
           {
-              "id": "xdwDIv6G5mOycVJ27VkC_",
+              "id": "xdwDcVJ27VkC_",
               "title": "Enter task title here",
               "description": "Describe task here",
               "due_date": "Nov 05 2023",
@@ -144,15 +137,15 @@ Tasks would have:
     ```
 
     Users can also retrieve a single task by passing the task id into the request paramter
-    ```**path: /api/v1/tasks/{task_id}**.```
+    -Endpoint: /tasks/:user_id/{task_id}.
 
-    Exapmle request:
-    ```request path: **/api/v1/tasks/9ktapmTHWcvn12xTPNyAB**```
+    Request:
+    ```request path: **/tasks/:user_id/9ktapmTHWcvn12xTPNyAB**```
 
-    Example response:
+    Response:
   ```JSON
     {
-      "id": "hhLhgqT8vzSb3C6p5LsoA",
+      "id": "hhLhp5LsoA",
       "title": "Task title here",
       "description": "Describe task title here",
       "due_date": "04/11/1998",
@@ -161,14 +154,11 @@ Tasks would have:
   ```
 
 - ### Task Updating
-	- Any changes made to a task are updated in memory during session
-  Users can make changes to tasks they created by sending a **PUT** request, providing the id of task to update.
-  request requires { title, description, due_date }
+	- Method: PUT
+  - Endpoint: **/tasks/:user_id/{id}**.
 
-  path: **/api/tasks/{id}**
-
-  Example request:
-  Request path: **/api/tasks/rr6K2YuX-YqOe3l2pV4Wd**.
+  Request:
+  Request path: **/tasks/:user_id/rr6K2YuX-YqOe3l2pV4Wd**.
 
   body:  
   ```JSON
@@ -179,12 +169,12 @@ Tasks would have:
     "status": "completed"
   }
   ```
-  Example response:
+  Response:
   ```JSON
   {
     "message": "Task updated successfully",
     "updated_task": {
-        "id": "rr6K2YuX-YqOe3l2pV4Wd",
+        "id": "rr6K2Yul2pV4Wd",
         "title": "Task title here",
         "description": "Describe task title here",
         "due_date": "Nov 05 2023",
@@ -194,13 +184,11 @@ Tasks would have:
   ```
 
 - ### Task Deletion
-	- Tasks can be deleted by the user.
-  Users can delete a previously created tasks by providing the task id in a **DELETE** request.
+	- Method: DELETE.
+  - Endpoint: **/tasks/:user_id/{id}**.
 
-  ```path: **/api/tasks/{id}**.```
-
-  Example request:
-  ```Request path: **/api/tasks/rr6K2YuX-YqOe3l2pV4Wd**.```
+  Request:
+  ```Request path: **/tasks/:user_id/rr6K2YuX-YqOe3l2pV4Wd**.```
 
   Response:
   ```JSON
