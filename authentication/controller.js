@@ -1,93 +1,60 @@
 import { StatusCodes } from 'http-status-codes'
 import bcrypt from 'bcrypt'
 import Users from '../models/users.js'
-import { nanoid } from 'nanoid';
+import jwt from 'jsonwebtoken'
+import { asyncWrapper, CustomError } from '../utils/index.js'
+import 'dotenv/config'
 
-const formatData = (id, fullname, email, password) => {
-  return {
-    id: id,
-    personal_info: {
-      fullname: fullname,
-      email: email,
-      password: password
-    },
-    tasks: []
+export const signup = asyncWrapper(async (req, res) => {
+  const {fullname, email, password} = req.user
+  
+  const emailExists = await Users.findOne({ email });
+
+  if (emailExists) {
+    throw new CustomError(
+      "User with email already exists, Login.",
+      StatusCodes.CONFLICT
+    );
   }
-}
-
-export const signup = async (req, res) => {
-  try {
-    const { fullname, email, password } = req.body
-
-  // request validation
-  if(!fullname || fullname.length < 3){
-    return res.status(StatusCodes.BAD_REQUEST).json({message: 'Fullname must be at least 3 letters long'})
-  }
-
-  if(!email){
-    return res.status(StatusCodes.BAD_REQUEST).json({message: 'Please provide email'})
-  }
-
-  if(!password){
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: 'Password must be at least 6 letters long, contain at least one uppercase letter and one number'
-    })
-  }
-
-  if(Users.some(user => user.personal_info.email === email)){
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: 'Account with email already exists'
-    })
-  }
-
   // encrypt password
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds)
 
-  const user_id = nanoid(6)
+  // save user  
+  const user = await Users.create({fullname, email, password: hashedPassword})
 
-  // save user
-  const user = formatData(user_id, fullname, email, hashedPassword)
-  Users.push(user)
+  const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET)
+
+  req.session.token = token
   
-  res.status(StatusCodes.CREATED).json({message: 'User saved successfully', data: {id: user_id, fullname, email} })
+  res.status(StatusCodes.CREATED).json({message: 'User saved successfully', data: { fullname, email} })
+})
 
-  } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message)
-  }
-}
 
-export const signin = async (req, res) => {
-  try {
-      
-    const { email, password } = req.body
+export const signin = asyncWrapper(async (req, res) => {
+    const { email, password } = req.user;
 
-    if(!email) {
-      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Enter Email Address'})
-    }
-
-    const user = Users.find(user => user.personal_info.email === email)
+    const user = await Users.findOne({email})
 
     if(!user){
-      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Account not found'})
+      throw new CustomError('Account not found', StatusCodes.NOT_FOUND)
     }
 
-    const isMatch = await bcrypt.compare(password, user.personal_info.password)
+    const isMatch = await bcrypt.compare(password, user.password)
 
     if(!isMatch){
-      return res.status(StatusCodes.FORBIDDEN).json({message: 'Invalid credentials'})
+      throw new CustomError('Invalid credentials', StatusCodes.UNAUTHORIZED)
     }
 
-    res.status(StatusCodes.OK).json({data: {
-      id: user.id,
-      fullname: user.personal_info.fullname,
-      email: user.personal_info.email,
+    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
+
+    req.session.token = token;
+
+    res.status(StatusCodes.OK).json({message: 'User logged in successfully', data: {
+      fullname: user.fullname,
+      email: user.email,
       tasks: user.tasks,
       'num_of_tasks': user.tasks.length
       }
     })
-
-  } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message) 
-  }
-}
+})

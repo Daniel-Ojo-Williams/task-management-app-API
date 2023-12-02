@@ -1,21 +1,16 @@
-const Users = [
-  {
-    id: 1,
-    personal_info: {
-      fullname: 'daniel',
-      email: 'daniel@gmail.com',
-      password: '1234'
-    },
+import { Schema, model } from 'mongoose'
+
+
+const userSchema = Schema({
+    fullname: {type: String, required: true},
+    email: {type: String, unique: true, required: true},
+    password: String,
     tasks: [
       {
-        id: 1,
-        title: 'Mall',
-        description: 'Go to the mall to get some badass stuffs',
-        due_date: '',
-        status: 'pending'
+        type: Schema.Types.ObjectId,
+        ref: 'Task'
       }
     ]
-  }
-]
+})
 
-export default Users
+export default model('User', userSchema)
