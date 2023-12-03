@@ -25,36 +25,6 @@ try {
     throw new CustomError('Invalid date format entered, enter date in \'Mmm Dd YYYY\' format. i.e Nov 12 2023, Jan 1 2012.')
   }
 
-  let formatDueDate = dueDate.split('');
-
-  let months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  
-
-  const month = months.indexOf(formatDueDate[0])
-  if(months < 0){
-    throw new CustomError('Invalid month entered, enter month between Jan - Dec')
-  }
-  const day = parseInt(formatDueDate[1])
-  const year = parseInt(formatDueDate[2])
-  
-
-  dueDate = new Date(month, day, year)
-
-  req.formattedTaskBody = {title, description, dueDate, completed}
-
   next();
 } catch (error) {
   next(error)
