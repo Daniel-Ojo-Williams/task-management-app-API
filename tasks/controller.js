@@ -1,93 +1,119 @@
 import { StatusCodes } from "http-status-codes";
-import Users from "../models/users.js";
-import Tasks from "../models/tasks.js";
+import db from "../db/connectdb.js";
 import { asyncWrapper } from "../utils/index.js";
 
-
 export const createTask = asyncWrapper(async (req, res) => {
-    const userId = req.user_id
-    const { title, description, dueDate, completed } =
-      req.body;
+  const userId = req.user_id;
+  let { title, description, dueDate, completed } = req.formatBody;
 
-    const task = await Tasks.create({
-      title,
-      description,
-      dueDate,
-      completed,
-      userId,
-    })
+  const response = await db.query(
+    "INSERT INTO tasks (title, description, userId, completed, dueDate) VALUES ($1, $2, $3, $4, TO_DATE($5, 'DD-MM-YYYY')) RETURNING *",
+    [title, description, userId, completed, dueDate]
+  );
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({
-        message: "Task saved succesfully",
-        task,
-      });
-})
+  const task = response.rows[0];
 
+  res.status(StatusCodes.CREATED).json({
+    message: "Task saved succesfully",
+    task,
+  });
+});
 
 export const getAllTasks = asyncWrapper(async (req, res) => {
-    const userId = req.user_id
-    
-    const tasks = await Tasks.find({userId})
+  const userId = req.user_id;
 
-    if(!tasks.length > 0){
-      return res.status(StatusCodes.OK).json({message: 'You do not have any tasks, create tasks to get started', tasks})
-    }
+  const response = await db.query("SELECT * FROM tasks WHERE userid = $1", [
+    userId,
+  ]);
 
-    res.status(StatusCodes.OK).json({message:'Success', tasks, 'num_of_tasks': tasks.length})
-})
+  const tasks = response.rows;
+
+  if (!tasks.length > 0) {
+    return res.status(StatusCodes.OK).json({
+      message: "You do not have any tasks, create tasks to get started",
+      tasks,
+    });
+  }
+
+  res
+    .status(StatusCodes.OK)
+    .json({ message: "Success", tasks, num_of_tasks: tasks.length });
+});
 
 export const getTask = asyncWrapper(async (req, res) => {
+  const { task_id } = req.params;
 
-    const { task_id } = req.params
+  if (!task_id) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "Please provide task id to get task" });
+  }
 
-    if(!task_id){
-      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Please provide task id to get task'})
-    }
+  const response = await db.query("SELECT * FROM tasks WHERE taskid = $1", [
+    task_id,
+  ]);
 
-    const task = await Tasks.findOne({_id: task_id})
+  const task = response.rows[0];
 
-    if(!task){
-      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Invalid task id, please try again with a valid task id'})
-    }
+  if (!task) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: "Invalid task id, please try again with a valid task id",
+    });
+  }
 
-    res.status(StatusCodes.OK).json({message:'Success', task})
-})
+  res.status(StatusCodes.OK).json({ message: "Success", task });
+});
 
-export const updateTask = asyncWrapper((req, res) => {
-    const userId = req.user_id
+export const updateTask = asyncWrapper(async (req, res) => {
+  const userId = req.user_id;
 
-    const { task_id } = req.params
+  const { task_id } = req.params;
 
-    if(!task_id){
-      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Please provide task id to get task'})
-    }
+  if (!task_id) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "Please provide task id to get task" });
+  }
+  let { title, description, dueDate, completed } = req.formatBody;
 
-    const task = Tasks.findOneAndUpdate({_id: task_id}, {...req.body}, {new: true})
-    
-    if(!task){
-      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Invalid task id, please try again with a valid task id'})
-    }
+  const response = await db.query(
+    "UPDATE tasks SET title = $1, description = $2, dueDate = TO_DATE($3, 'DD-MM-YYYY'), completed = $4 WHERE taskid = $5 AND userid = $6 RETURNING *",
+    [title, description, dueDate, completed, task_id, userId]
+  );
 
-    res.status(StatusCodes.OK).json({message: 'Task updated successfully', updated_task: task})
+  const task = response?.rows[0];
 
-})
+  if (!task) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: "Invalid task id, please try again with a valid task id",
+    });
+  }
 
+  res
+    .status(StatusCodes.OK)
+    .json({ message: "Task updated successfully", updated_task: task });
+});
 
 export const deleteTask = asyncWrapper(async (req, res) => {
+  const { task_id } = req.params;
+  const userId = req.user_id;
 
-    const { task_id } = req.params
+  if (!task_id) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "Please provide task id to get task" });
+  }
 
-    if(!task_id){
-      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Please provide task id to get task'})
-    }
+  const task = await db.query(
+    "DELETE FROM tasks WHERE taskid = $1 AND userid = $2",
+    [task_id, userId]
+  );
 
-    const task = await Tasks.findOneAndDelete({_id: task_id})
-    
-    if(!task){
-      return res.status(StatusCodes.BAD_REQUEST).json({message: 'Task with provided id not found'})
-    }
+  if (!task) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "Task with provided id not found" });
+  }
 
-    res.status(StatusCodes.OK).json({message: 'Task deleted successfully'})
-})
+  res.status(StatusCodes.OK).json({ message: "Task deleted successfully" });
+});

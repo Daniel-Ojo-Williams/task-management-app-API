@@ -1,5 +1,13 @@
-import mongoose from "mongoose";
+// import { Client } from 'pg';
+import pkg from "pg";
+const { Pool } = pkg;
 
-export const connectdb = async(uri) => {
-  await mongoose.connect(uri)
-}
+const client = new Pool({
+  host: "localhost",
+  port: 5432,
+  database: "freakydmuse",
+  user: "freakydmuse",
+  password: "Owdanny400",
+});
+
+export default client;
