@@ -4,9 +4,9 @@ import { CustomError } from "../utils/index.js";
 const validateBody = (req, res, next) => {
   try {
     // Get task details
-    let { title, description, dueDate, completed } = req.body;
+    let { title, description, dueDate, status } = req.body;
 
-    completed = !completed ? false : true;
+    status = !status ? false : true;
 
     // validate task details
     if (!title) {
@@ -36,7 +36,7 @@ const validateBody = (req, res, next) => {
     //   throw new CustomError('Invalid date format entered, enter date in \'Mmm Dd YYYY\' format. i.e Nov 12 2023, Jan 1 2012.')
     // }
 
-    req.formatBody = { title, description, dueDate, completed };
+    req.formatBody = { title, description, dueDate, status };
     next();
   } catch (error) {
     next(error);

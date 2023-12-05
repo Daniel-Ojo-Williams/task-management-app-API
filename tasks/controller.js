@@ -4,11 +4,11 @@ import { asyncWrapper } from "../utils/index.js";
 
 export const createTask = asyncWrapper(async (req, res) => {
   const userId = req.user_id;
-  let { title, description, dueDate, completed } = req.formatBody;
+  let { title, description, dueDate, status } = req.formatBody;
 
   const response = await db.query(
-    "INSERT INTO tasks (title, description, userId, completed, dueDate) VALUES ($1, $2, $3, $4, TO_DATE($5, 'DD-MM-YYYY')) RETURNING *",
-    [title, description, userId, completed, dueDate]
+    "INSERT INTO tasks (title, description, userId, status, dueDate) VALUES ($1, $2, $3, $4, TO_DATE($5, 'DD-MM-YYYY')) RETURNING *",
+    [title, description, userId, status, dueDate]
   );
 
   const task = response.rows[0];
@@ -74,11 +74,11 @@ export const updateTask = asyncWrapper(async (req, res) => {
       .status(StatusCodes.BAD_REQUEST)
       .json({ message: "Please provide task id to get task" });
   }
-  let { title, description, dueDate, completed } = req.formatBody;
+  let { title, description, dueDate, status } = req.formatBody;
 
   const response = await db.query(
-    "UPDATE tasks SET title = $1, description = $2, dueDate = TO_DATE($3, 'DD-MM-YYYY'), completed = $4 WHERE taskid = $5 AND userid = $6 RETURNING *",
-    [title, description, dueDate, completed, task_id, userId]
+    "UPDATE tasks SET title = $1, description = $2, dueDate = TO_DATE($3, 'DD-MM-YYYY'), status = $4 WHERE taskid = $5 AND userid = $6 RETURNING *",
+    [title, description, dueDate, status, task_id, userId]
   );
 
   const task = response?.rows[0];

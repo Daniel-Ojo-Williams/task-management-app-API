@@ -36,7 +36,7 @@ Tasks would have:
   {
     "message": 'user saved successfully',
     "data": {
-      "id": "qf39gd-ENkufMrFLF9ZFl",
+      "userid": "qf39gd-ENkufMrFLF9ZFl",
       "fullname": "Willy wonka",
       "email": "Willywonka@gmail.com"
     }
@@ -61,7 +61,7 @@ Tasks would have:
   ```json
   {
     data: {
-      "id": "mXJut0--FazUfjec2L6bI",
+      "userid": "mXJut0--FazUfjec2L6bI",
       "fullname": "Willy wonka",
       "email": "Willywonka@gmail.com",
       "tasks": [],
@@ -73,18 +73,18 @@ Tasks would have:
 
 - ### Task Creation
 	- Method: POST.
-  - Endpoint: **/tasks/:user_id**.
+  - Endpoint: **/tasks/createTask**.
   
   status can also be added, can be either completed or pending, if status is not provided 'pending' is added by default.
   
-  *NOTE* due_date is a string, it can be in any format for now, but it's a string.
+  *NOTE* duedate is a string, it can be in any format for now, but it's a string.
 
   Request:
   ```JSON
   {
     "title": "Task title here",
     "description": "Describe task title here",
-    "due_date": "04/11/1998"
+    "duedate": "04/11/1998"
   }
   ```
 
@@ -93,17 +93,17 @@ Tasks would have:
   {
     "message": "Task saved succesfully",
     "task": {
-        "id": "9ktapmTHWcvn12xTPNyAB",
+        "taskid": "9ktapmTHWcvn12xTPNyAB",
         "title": "Task title here",
         "description": "Describe task title here",
-        "due_date": "04/11/1998",
+        "duedate": "04/11/1998",
         "status": "pending"
     }
   }
   ```
 
 - ### Task Viewing
-	- Endpoint: /tasks/:user_id.
+	- Endpoint: /tasks.
   - Method: GET.
 
     Response:
@@ -111,24 +111,24 @@ Tasks would have:
       {
       "tasks": [
           {
-              "id": "nyLsWYGai5Nh_b-ddSt8_",
+              "taskid": "nyLsWYGai5Nh_b-ddSt8_",
               "title": "Task title here",
               "description": "Task description here",
-              "due_date": "Jan_20_2024",
+              "duedate": "Jan_20_2024",
               "status": "pending"
           },
           {
-              "id": "F2fkDiu3zp7",
+              "taskid": "F2fkDiu3zp7",
               "title": "Enter task title here",
               "description": "Describe task here",
-              "due_date": "30/12/2023",
+              "duedate": "30/12/2023",
               "status": "pending"
           },
           {
-              "id": "xdwDcVJ27VkC_",
+              "taskid": "xdwDcVJ27VkC_",
               "title": "Enter task title here",
               "description": "Describe task here",
-              "due_date": "Nov 05 2023",
+              "duedate": "Nov 05 2023",
               "status": "completed"
           }
         ],
@@ -137,35 +137,35 @@ Tasks would have:
     ```
 
     Users can also retrieve a single task by passing the task id into the request paramter
-    -Endpoint: /tasks/:user_id/{task_id}.
+    -Endpoint: /tasks/{task_id}.
 
     Request:
-    ```request path: **/tasks/:user_id/9ktapmTHWcvn12xTPNyAB**```
+    ```request path: **/tasks/9ktapmTHWcvn12xTPNyAB**```
 
     Response:
   ```JSON
     {
-      "id": "hhLhp5LsoA",
+      "taskid": "hhLhp5LsoA",
       "title": "Task title here",
       "description": "Describe task title here",
-      "due_date": "04/11/1998",
+      "duedate": "04/11/1998",
       "status": "pending"
     }
   ```
 
 - ### Task Updating
 	- Method: PUT
-  - Endpoint: **/tasks/:user_id/{id}**.
+  - Endpoint: **/tasks/{task_id}**.
 
   Request:
-  Request path: **/tasks/:user_id/rr6K2YuX-YqOe3l2pV4Wd**.
+  Request path: **/tasks/rr6K2YuX-YqOe3l2pV4Wd**.
 
   body:  
   ```JSON
   {
     "title": "Task title here",
     "description": "Describe task title here",
-    "due_date": "Nov 05 2023",
+    "duedate": "Nov 05 2023",
     "status": "completed"
   }
   ```
@@ -174,10 +174,10 @@ Tasks would have:
   {
     "message": "Task updated successfully",
     "updated_task": {
-        "id": "rr6K2Yul2pV4Wd",
+        "taskid": "rr6K2Yul2pV4Wd",
         "title": "Task title here",
         "description": "Describe task title here",
-        "due_date": "Nov 05 2023",
+        "duedate": "Nov 05 2023",
         "status": "completed"
     },
   }
@@ -185,10 +185,10 @@ Tasks would have:
 
 - ### Task Deletion
 	- Method: DELETE.
-  - Endpoint: **/tasks/:user_id/{id}**.
+  - Endpoint: **/tasks/{task_id}**.
 
   Request:
-  ```Request path: **/tasks/:user_id/rr6K2YuX-YqOe3l2pV4Wd**.```
+  ```Request path: **/tasks/rr6K2YuX-YqOe3l2pV4Wd**.```
 
   Response:
   ```JSON

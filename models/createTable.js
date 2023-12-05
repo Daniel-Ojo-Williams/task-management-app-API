@@ -10,7 +10,7 @@ const createTable = async () => {
 
     await pool.query('DROP TABLE IF EXISTS "tasks"');
     const tasks =
-      'CREATE TABLE IF NOT EXISTS "tasks"(taskId SERIAL PRIMARY KEY, title TEXT, description TEXT, completed BOOLEAN DEFAULT false, dueDate DATE NOT NULL, userId SERIAL REFERENCES "users" (userId) )';
+      'CREATE TABLE IF NOT EXISTS "tasks"(taskId SERIAL PRIMARY KEY, title TEXT, description TEXT, status TEXT, dueDate DATE NOT NULL, userId SERIAL REFERENCES "users" (userId) )';
 
     await pool.query(tasks);
   } catch (error) {
