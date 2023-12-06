@@ -1,16 +1,19 @@
-import { StatusCodes } from 'http-status-codes'
-import bcrypt from 'bcrypt'
-import Users from '../models/users.js'
-import jwt from 'jsonwebtoken'
-import { asyncWrapper, CustomError } from '../utils/index.js'
-import 'dotenv/config'
+import { StatusCodes } from "http-status-codes";
+import bcrypt from "bcrypt";
+import db from "../db/connectdb.js";
+import jwt from "jsonwebtoken";
+import { asyncWrapper, CustomError } from "../utils/index.js";
+import "dotenv/config";
 
 export const signup = asyncWrapper(async (req, res) => {
-  const {fullname, email, password} = req.user
-  
-  const emailExists = await Users.findOne({ email });
+  const { fullname, email, password } = req.user;
 
-  if (emailExists) {
+  // check if email exist already
+  const { rows } = await db.query('SELECT * FROM "users" WHERE email = $1', [
+    email,
+  ]);
+
+  if (rows.length > 0) {
     throw new CustomError(
       "User with email already exists, Login.",
       StatusCodes.CONFLICT
@@ -18,43 +21,53 @@ export const signup = asyncWrapper(async (req, res) => {
   }
   // encrypt password
   const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds)
+  const passwordHash = await bcrypt.hash(password, saltRounds);
 
-  // save user  
-  const user = await Users.create({fullname, email, password: hashedPassword})
+  // save user
+  const response = await db.query(
+    'INSERT INTO "users" (fullname, email, passwordHash) VALUES ($1, $2, $3) RETURNING userId, fullname, email',
+    [fullname, email, passwordHash]
+  );
 
-  const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET)
+  const user = response.rows[0];
 
-  req.session.token = token
-  
-  res.status(StatusCodes.CREATED).json({message: 'User saved successfully', data: { fullname, email} })
-})
+  const token = jwt.sign({ _id: user.userid }, process.env.TOKEN_SECRET);
 
+  req.session.token = token;
+
+  res
+    .status(StatusCodes.CREATED)
+    .json({ message: "User saved successfully", data: { fullname, email } });
+});
 
 export const signin = asyncWrapper(async (req, res) => {
-    const { email, password } = req.user;
+  const { email, password } = req.user;
 
-    const user = await Users.findOne({email})
+  const { rows } = await db.query('SELECT * FROM "users" WHERE email = $1', [
+    email,
+  ]);
 
-    if(!user){
-      throw new CustomError('Account not found', StatusCodes.NOT_FOUND)
-    }
+  if (!rows.length > 0) {
+    throw new CustomError("Account not found", StatusCodes.NOT_FOUND);
+  }
 
-    const isMatch = await bcrypt.compare(password, user.password)
+  const user = rows[0];
 
-    if(!isMatch){
-      throw new CustomError('Invalid credentials', StatusCodes.UNAUTHORIZED)
-    }
+  const isMatch = await bcrypt.compare(password, user.passwordhash);
 
-    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
+  if (!isMatch) {
+    throw new CustomError("Invalid credentials", StatusCodes.UNAUTHORIZED);
+  }
 
-    req.session.token = token;
+  const token = jwt.sign({ _id: user.userid }, process.env.TOKEN_SECRET);
 
-    res.status(StatusCodes.OK).json({message: 'User logged in successfully', data: {
+  req.session.token = token;
+
+  res.status(StatusCodes.OK).json({
+    message: "User logged in successfully",
+    data: {
       fullname: user.fullname,
       email: user.email,
-      tasks: user.tasks,
-      'num_of_tasks': user.tasks.length
-      }
-    })
-})
+    },
+  });
+});
