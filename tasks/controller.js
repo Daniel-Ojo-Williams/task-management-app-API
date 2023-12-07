@@ -88,14 +88,13 @@ export const deleteTask = asyncWrapper(async (req, res) => {
       .json({ message: "Please provide task id to get task" });
   } 
 
-  let task = await Tasks.findOne(task_id);
+  let task = await Tasks.deleteTask(task_id, userId)
   
   if (!task) {
     return res
     .status(StatusCodes.BAD_REQUEST)
     .json({ message: "Task with provided id not found" });
   }
-  await Tasks.deleteTask(task_id, userId)
   
   res.status(StatusCodes.OK).json({ message: "Task deleted successfully" });
 });

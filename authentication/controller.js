@@ -16,7 +16,6 @@ export const signup = asyncWrapper(async (req, res) => {
   // save user
   let user = new User(fullname, email, passwordHash);
   user = await user.createUser()
-  console.log(user)
 
   const token = jwt.sign({ _id: user.userid }, process.env.TOKEN_SECRET);
 
