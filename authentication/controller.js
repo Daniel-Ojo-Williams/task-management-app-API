@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt";
-import db from "../db/connectdb.js";
+import User from "../models/Users.js";
 import jwt from "jsonwebtoken";
 import { asyncWrapper, CustomError } from "../utils/index.js";
 import "dotenv/config";
@@ -8,28 +8,15 @@ import "dotenv/config";
 export const signup = asyncWrapper(async (req, res) => {
   const { fullname, email, password } = req.user;
 
-  // check if email exist already
-  const { rows } = await db.query('SELECT * FROM "users" WHERE email = $1', [
-    email,
-  ]);
-
-  if (rows.length > 0) {
-    throw new CustomError(
-      "User with email already exists, Login.",
-      StatusCodes.CONFLICT
-    );
-  }
+  
   // encrypt password
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
   // save user
-  const response = await db.query(
-    'INSERT INTO "users" (fullname, email, passwordHash) VALUES ($1, $2, $3) RETURNING userId, fullname, email',
-    [fullname, email, passwordHash]
-  );
-
-  const user = response.rows[0];
+  let user = new User(fullname, email, passwordHash);
+  user = await user.createUser()
+  console.log(user)
 
   const token = jwt.sign({ _id: user.userid }, process.env.TOKEN_SECRET);
 
@@ -43,15 +30,11 @@ export const signup = asyncWrapper(async (req, res) => {
 export const signin = asyncWrapper(async (req, res) => {
   const { email, password } = req.user;
 
-  const { rows } = await db.query('SELECT * FROM "users" WHERE email = $1', [
-    email,
-  ]);
-
-  if (!rows.length > 0) {
-    throw new CustomError("Account not found", StatusCodes.NOT_FOUND);
+  const user = await User.findOne(email);
+  
+  if(!user) {
+    throw new CustomError("User does not exist, create Account", StatusCodes.UNAUTHORIZED);
   }
-
-  const user = rows[0];
 
   const isMatch = await bcrypt.compare(password, user.passwordhash);
 
