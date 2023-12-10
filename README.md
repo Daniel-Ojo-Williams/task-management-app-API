@@ -64,8 +64,6 @@ Tasks would have:
       "userid": "mXJut0--FazUfjec2L6bI",
       "fullname": "Willy wonka",
       "email": "Willywonka@gmail.com",
-      "tasks": [],
-      "num_of_tasks": 0
     }
   }
   ```
@@ -77,14 +75,14 @@ Tasks would have:
   
   status can also be added, can be either completed or pending, if status is not provided 'pending' is added by default.
   
-  *NOTE* duedate is a string, it can be in any format for now, but it's a string.
+  *NOTE* duedate is a string and must be formated as dd-mm-yyyy i.e. 11-12-2023.
 
   Request:
   ```JSON
   {
     "title": "Task title here",
     "description": "Describe task title here",
-    "duedate": "04/11/1998"
+    "duedate": "11-12-2024"
   }
   ```
 
@@ -96,7 +94,7 @@ Tasks would have:
         "taskid": "9ktapmTHWcvn12xTPNyAB",
         "title": "Task title here",
         "description": "Describe task title here",
-        "duedate": "04/11/1998",
+        "duedate": "11-12-2024",
         "status": "pending"
     }
   }
@@ -114,21 +112,21 @@ Tasks would have:
               "taskid": "nyLsWYGai5Nh_b-ddSt8_",
               "title": "Task title here",
               "description": "Task description here",
-              "duedate": "Jan_20_2024",
+              "duedate": "11-12-2024",
               "status": "pending"
           },
           {
               "taskid": "F2fkDiu3zp7",
               "title": "Enter task title here",
               "description": "Describe task here",
-              "duedate": "30/12/2023",
+              "duedate": "11-12-2024",
               "status": "pending"
           },
           {
               "taskid": "xdwDcVJ27VkC_",
               "title": "Enter task title here",
               "description": "Describe task here",
-              "duedate": "Nov 05 2023",
+              "duedate": "11-12-2024",
               "status": "completed"
           }
         ],
@@ -140,7 +138,7 @@ Tasks would have:
     -Endpoint: /tasks/{task_id}.
 
     Request:
-    ```request path: **/tasks/9ktapmTHWcvn12xTPNyAB**```
+    request path: **/tasks/9ktapmTHWcvn12xTPNyAB**
 
     Response:
   ```JSON
@@ -148,7 +146,7 @@ Tasks would have:
       "taskid": "hhLhp5LsoA",
       "title": "Task title here",
       "description": "Describe task title here",
-      "duedate": "04/11/1998",
+      "duedate": "11-12-2024",
       "status": "pending"
     }
   ```
@@ -165,7 +163,7 @@ Tasks would have:
   {
     "title": "Task title here",
     "description": "Describe task title here",
-    "duedate": "Nov 05 2023",
+    "duedate": "11-12-2024",
     "status": "completed"
   }
   ```
@@ -177,7 +175,7 @@ Tasks would have:
         "taskid": "rr6K2Yul2pV4Wd",
         "title": "Task title here",
         "description": "Describe task title here",
-        "duedate": "Nov 05 2023",
+        "duedate": "11-12-2024",
         "status": "completed"
     },
   }
@@ -188,7 +186,7 @@ Tasks would have:
   - Endpoint: **/tasks/{task_id}**.
 
   Request:
-  ```Request path: **/tasks/rr6K2YuX-YqOe3l2pV4Wd**.```
+  Request path: **/tasks/rr6K2YuX-YqOe3l2pV4Wd**.
 
   Response:
   ```JSON
