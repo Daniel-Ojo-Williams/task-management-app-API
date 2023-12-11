@@ -7,8 +7,18 @@ import { validateAuthBody, protectRoute } from "./middleware/index.js";
 import { globalErrorHandler } from "./utils/index.js";
 import session from "express-session";
 import createTable from "./models/createTable.js";
+import { job } from "./tasks/cronJob.js";
+import morgan from 'morgan'
+import { fileURLToPath } from 'url'
+import { dirname, join } from "path";
+import { createWriteStream } from "fs";
 
 const app = express();
+
+const logFile = join(dirname(fileURLToPath(import.meta.url)), 'access.log')
+const accessLogStream = createWriteStream(logFile, {flags: 'a'})
+
+app.use(morgan('combined', {stream: accessLogStream}))
 
 app.use(
   session({
@@ -40,3 +50,5 @@ app.listen(PORT, async () => {
     console.log("Connection faild", error.message);
   }
 });
+
+job.start();
