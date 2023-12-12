@@ -3,7 +3,7 @@ import AuthRoute from "./authentication/routes.js";
 import TaskRoute from "./tasks/routes.js";
 import db from "./db/connectdb.js";
 import "dotenv/config";
-import { validateAuthBody, protectRoute } from "./middleware/index.js";
+import { validateAuthBody, protectRoute, validateTaskBody } from "./middleware/index.js";
 import { globalErrorHandler } from "./utils/index.js";
 import session from "express-session";
 import createTable from "./models/createTable.js";
@@ -36,7 +36,8 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
 app.use("/auth", validateAuthBody, AuthRoute);
-app.use("/tasks", protectRoute, TaskRoute);
+app.use(protectRoute)
+app.use("/tasks", validateTaskBody, TaskRoute);
 
 app.use(globalErrorHandler);
 app.listen(PORT, async () => {

@@ -75,7 +75,7 @@ Tasks would have:
   
   status can also be added, can be either completed or pending, if status is not provided 'pending' is added by default.
   
-  *NOTE* duedate is a string and must be formated as dd-mm-yyyy i.e. 11-12-2023.
+  *NOTE* duedate is a string and must be formated as dd-mm-yyyy i.e. 11-12-2023, 3-05-2024.
 
   Request:
   ```JSON
@@ -197,5 +197,18 @@ Tasks would have:
 	- Deleted tasks are removed from memory
 
 
-- Task Status Update
+- ### Task Status Update
 	- Task status field can be toggled between pending and completed
+  - Methods: PATCH.
+  - Endpoint: **/tasks/{task_id}**.
+    Request:
+
+  Request path: **/tasks/1**.
+
+  Response:
+  ```JSON
+  {
+    "message": "Task status updated successfully"
+  }
+
+  - Ensure only task status is sent through this route/method, any other info sent through here will not be updated. To update other parts of the task check task update.
