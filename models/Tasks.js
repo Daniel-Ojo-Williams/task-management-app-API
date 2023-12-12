@@ -9,6 +9,7 @@ class Tasks {
     this.userId = userId;
   }
 
+  // create a task
   async createTask(){
     const response = await db.query(
       "INSERT INTO tasks (title, description, userId, status, dueDate) VALUES ($1, $2, $3, $4, TO_DATE($5, 'DD-MM-YYYY')) RETURNING *, to_char(duedate::date, \'Mon dd, yyyy\') AS duedate",
@@ -17,6 +18,7 @@ class Tasks {
 
     return await response.rows[0]
   }
+  // update task, task status defaults to pending if status is not provided
   static async updateTask(taskId, title, description, userId, status = 'pending', dueDate){
     const response = await db.query(
       "UPDATE tasks SET title = $1, description = $2, dueDate = TO_DATE($3, 'DD-MM-YYYY'), status = $4 WHERE taskid = $5 AND userid = $6 RETURNING *, to_char(duedate::date, 'Mon dd, yyyy') AS duedate",
@@ -31,6 +33,8 @@ class Tasks {
     );
     return await response.rows;
   }
+
+  // get one task
   static async findOne(taskId){
     const response = await db.query(
       "SELECT *, to_char(duedate::date, 'Mon dd, yyyy') AS duedate FROM tasks WHERE taskid = $1",
