@@ -210,5 +210,6 @@ Tasks would have:
   {
     "message": "Task status updated successfully"
   }
+  ```
 
   - Ensure only task status is sent through this route/method, any other info sent through here will not be updated. To update other parts of the task check task update.
