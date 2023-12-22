@@ -12,6 +12,7 @@ import morgan from 'morgan'
 import { fileURLToPath } from 'url'
 import { dirname, join } from "path";
 import { createWriteStream } from "fs";
+import { createClient } from "redis";
 
 const app = express();
 
@@ -31,9 +32,22 @@ app.use(
   })
 );
 
+// initiate redis client on server start
+export let redisClient
+(
+  async () => {
+    redisClient = createClient();
+    redisClient.on('error', (err) => {
+      console.error(`Error : ${err.message}`);
+    })
+
+    await redisClient.connect();
+  }
+)();
+
 app.use(express.json());
 // use the port provided by the server if available or use port 5000
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 app.use("/auth", validateAuthBody, AuthRoute);
 app.use(protectRoute)
